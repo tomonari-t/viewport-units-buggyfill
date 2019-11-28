@@ -35,8 +35,10 @@
     var isBuggyIE = /MSIE [0-9]\./i.test(userAgent);
     var isOldIE = /MSIE [0-8]\./i.test(userAgent);
     var isOperaMini = userAgent.indexOf('Opera Mini') > -1;
+    var maxTouchPoints = window.navigator.maxTouchPoints;
+    var isSafari = /Safari/.test(userAgent);
 
-    var isMobileSafari = /(iPhone|iPod|iPad).+AppleWebKit/i.test(userAgent) && (function() {
+    var isMobileSafari = (/(iPhone|iPod|iPad).+AppleWebKit/i.test(userAgent) || (isSafari && maxTouchPoints > 1)) && (function() {
       // Regexp for iOS-version tested against the following userAgent strings:
       // Example WebView UserAgents:
       // * iOS Chrome on iOS8: "Mozilla/5.0 (iPad; CPU OS 8_1 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) CriOS/39.0.2171.50 Mobile/12B410 Safari/600.1.4"
@@ -44,6 +46,9 @@
       // Example Safari UserAgents:
       // * Safari iOS8: "Mozilla/5.0 (iPhone; CPU iPhone OS 8_0 like Mac OS X) AppleWebKit/600.1.3 (KHTML, like Gecko) Version/8.0 Mobile/12A4345d Safari/600.1.4"
       // * Safari iOS7: "Mozilla/5.0 (iPhone; CPU iPhone OS 7_0 like Mac OS X) AppleWebKit/537.51.1 (KHTML, like Gecko) Version/7.0 Mobile/11A4449d Safari/9537.53"
+      // * Safari iOS13: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0 Safari/605.1.15"
+      // ** From iOS13, iPad's default UserAgent is same to Safari
+      //    https://stackoverflow.com/questions/58019463/how-to-detect-device-name-in-safari-on-ios-13-while-it-doesnt-show-the-correct
       var iOSversion = userAgent.match(/OS (\d+)/);
       // viewport units work fine in mobile Safari and webView on iOS 8+
       return iOSversion && iOSversion.length > 1 && parseInt(iOSversion[1]) < 10;
